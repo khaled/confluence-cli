@@ -293,6 +293,17 @@ describe('ConfluenceClient', () => {
       expect(result).toContain('- Item 2');
     });
 
+    test('should preserve top-level bullets when nested lists are present', () => {
+      const html = '<ul><li><p>First item</p><ul><li><p>First nested</p></li></ul></li><li><p>Second item</p><ul><li><p>Second nested</p></li></ul></li><li><p>Third item</p></li></ul>';
+      const result = client.htmlToMarkdown(html);
+
+      expect(result).toContain('- First item');
+      expect(result).toContain('  - First nested');
+      expect(result).toContain('- Second item');
+      expect(result).toContain('  - Second nested');
+      expect(result).toContain('- Third item');
+    });
+
     test('should convert HTML tables to markdown', () => {
       const html = '<table><tr><th><p>Header</p></th></tr><tr><td><p>Cell</p></td></tr></table>';
       const result = client.htmlToMarkdown(html);
