@@ -259,6 +259,14 @@ describe('ConfluenceClient', () => {
       expect(result).toContain('```');
     });
 
+    test('should add a newline after code fence before following prose', () => {
+      const storage = '<ac:structured-macro ac:name="code"><ac:parameter ac:name="language">sh</ac:parameter><ac:plain-text-body><![CDATA[printf "sample" > /tmp/example.txt]]></ac:plain-text-body></ac:structured-macro><p>The next paragraph should start after a blank line.</p>';
+      const result = client.storageToMarkdown(storage);
+
+      expect(result).toContain('```\n\nThe next paragraph should start after a blank line.');
+      expect(result).not.toContain('```The next paragraph should start after a blank line.');
+    });
+
     test('should convert Confluence macros to admonitions', () => {
       const storage = '<ac:structured-macro ac:name="info"><ac:rich-text-body><p>This is info</p></ac:rich-text-body></ac:structured-macro>';
       const result = client.storageToMarkdown(storage);
