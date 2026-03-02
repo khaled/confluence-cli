@@ -314,6 +314,32 @@ describe('ConfluenceClient', () => {
       expect(result).toContain('*italic*');
     });
 
+    test('should trim strong tag content inside markdown bold delimiters', () => {
+      const html = '<ul><li><strong><span style="color: rgb(112,112,112);"> Cluster wildcard (*.example.test) </span></strong></li></ul>';
+      const result = client.htmlToMarkdown(html);
+
+      expect(result).toContain('- **Cluster wildcard (*.example.test)**');
+      expect(result).not.toContain('** Cluster wildcard (*.example.test) **');
+    });
+
+    test('should trim em tag content inside markdown italic delimiters', () => {
+      const html = '<ul><li><em><span style="color: rgb(112,112,112);"> Regional note </span></em></li></ul>';
+      const result = client.htmlToMarkdown(html);
+
+      expect(result).toContain('- *Regional note*');
+      expect(result).not.toContain('* Regional note *');
+    });
+
+    test('should trim spaces inside underscore emphasis markers', () => {
+      const html = '<p>__ highlighted phrase __ and _ side note _</p>';
+      const result = client.htmlToMarkdown(html);
+
+      expect(result).toContain('__highlighted phrase__');
+      expect(result).toContain('_side note_');
+      expect(result).not.toContain('__ highlighted phrase __');
+      expect(result).not.toContain('_ side note _');
+    });
+
     test('should convert HTML lists to markdown', () => {
       const html = '<ul><li><p>Item 1</p></li><li><p>Item 2</p></li></ul>';
       const result = client.htmlToMarkdown(html);
