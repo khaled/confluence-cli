@@ -273,6 +273,20 @@ describe('ConfluenceClient', () => {
       
       expect(result).toContain('[Example](https://example.com)');
     });
+
+    test('should URL-encode spaces in attachment image links', () => {
+      const storage = '<ac:image><ri:attachment ri:filename="Project Plan.png" /></ac:image>';
+      const result = client.storageToMarkdown(storage);
+
+      expect(result).toContain('![Project Plan.png](attachments/Project%20Plan.png)');
+    });
+
+    test('should URL-encode spaces in view-file attachment links', () => {
+      const storage = '<ac:structured-macro ac:name="view-file"><ac:parameter ac:name="name"><ri:attachment ri:filename="Project Plan.pdf" /></ac:parameter></ac:structured-macro>';
+      const result = client.storageToMarkdown(storage);
+
+      expect(result).toContain('📎 [Project Plan.pdf](attachments/Project%20Plan.pdf)');
+    });
   });
 
   describe('htmlToMarkdown', () => {
